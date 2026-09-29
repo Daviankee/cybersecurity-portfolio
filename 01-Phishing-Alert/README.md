@@ -27,7 +27,7 @@ I reviewed the initial alert and identified the relevant indicators.
 --> Alert name — Access to Blacklisted External URL Blocked by Firewall.
 
 --> Severity and risk score — High.
-
+![Initial Alert](screenshots/alert.png)
 
 ### 2. SIEM Investigation
 
