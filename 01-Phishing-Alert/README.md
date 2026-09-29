@@ -22,7 +22,7 @@ Determine whether the alert represents malicious activity or a false positive.
 
 I reviewed the initial alert and identified the relevant indicators.
 
-![Initial Alert](screenshots/alert.png)
+![Initial Alert](screenshot 2026-09-29 230159.png)
 
 ### 2. SIEM Investigation
 
