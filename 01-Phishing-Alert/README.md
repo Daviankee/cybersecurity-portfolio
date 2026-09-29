@@ -38,3 +38,13 @@ I searched the SIEM for related activity using the available indicators.
 --> Rule: Blocked Websites
 --> timestamp: 09/29/2026 15:57:02.294
 ![Initial Alert](screenshots/siemsearch.png)
+
+### 3. Finding
+
+I use TrydetectThis and VirusTotal on the URl.
+--> It will redirect user to 67.199.248.1
+--> It is flagged as malicious and flag for phishing and C2 command
+![Initial Alert](screenshots/URLDetector.png)
+
+
+
