@@ -22,10 +22,18 @@ Determine whether the alert represents malicious activity or a false positive.
 
 I reviewed the initial alert and identified the relevant indicators.
 
+--> Alert ID — 8816.
+
+--> Alert name — Access to Blacklisted External URL Blocked by Firewall.
+
+--> Severity and risk score — High.
+
 
 ### 2. SIEM Investigation
 
 I searched the SIEM for related activity using the available indicators.
 
-```text
-YOUR SIEM QUERY HERE
+--> URL: hxxps[://]bit[.]ly/3sHkX3da12340
+--> DestinationIP: 67.199.248.11
+--> Rule: Blocked Websites
+--> timestamp: 09/29/2026 15:57:02.294
