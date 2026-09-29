@@ -37,3 +37,4 @@ I searched the SIEM for related activity using the available indicators.
 --> DestinationIP: 67.199.248.11
 --> Rule: Blocked Websites
 --> timestamp: 09/29/2026 15:57:02.294
+![Initial Alert](screenshots/siemsearch.png)
