@@ -33,7 +33,7 @@ This allowed me to isolate ICMP packets and review the communication between int
 
 I filtered for ICMP Echo Request packets:
 
-![ICMP Echo Requests](screenshots/icmp-echo-requests.png)
+![ICMP Echo Requests](screenshots/icmp-echo-request.png)
 
 ```text
 icmp.type == 8
