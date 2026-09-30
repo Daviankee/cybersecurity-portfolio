@@ -21,17 +21,19 @@ Identify suspicious ICMP traffic and determine whether data was being exfiltrate
 
 I started by filtering the packet capture for ICMP traffic:
 
+[ICMP Traffic](screenshots/icmp-traffic.png))
+
 ```text
 icmp
 ```
 
 This allowed me to isolate ICMP packets and review the communication between internal and external hosts.
 
-[ICMP Traffic](https://github.com/Daviankee/cybersecurity-portfolio/blob/main/02-Data-Exfiltration-Detection/ICMP-Exfiltration/screenshots/icmp-traffic.png) ([image](https://github.com/Daviankee/cybersecurity-portfolio/raw/main/02-Data-Exfiltration-Detection/ICMP-Exfiltration/screenshots/icmp-traffic.png))
-
 ### 2. Identify Echo Requests
 
 I filtered for ICMP Echo Request packets:
+
+[ICMP Echo Requests](screenshots/icmp-echo-requests.png))
 
 ```text
 icmp.type == 8
@@ -39,11 +41,11 @@ icmp.type == 8
 
 Echo Requests are commonly used for ping operations, so I reviewed the traffic for unusual activity.
 
-[ICMP Echo Requests](https://github.com/Daviankee/cybersecurity-portfolio/blob/main/02-Data-Exfiltration-Detection/ICMP-Exfiltration/screenshots/icmp-echo-requests.png) ([image](https://github.com/Daviankee/cybersecurity-portfolio/raw/main/02-Data-Exfiltration-Detection/ICMP-Exfiltration/screenshots/icmp-echo-requests.png))
-
 ### 3. Identify Large ICMP Packets
 
 I then filtered for Echo Requests with a frame length greater than 100 bytes:
+
+[Large ICMP Packets](screenshots/large-icmp-packets.png)
 
 ```text
 icmp.type == 8 and frame.len > 100
@@ -51,13 +53,11 @@ icmp.type == 8 and frame.len > 100
 
 Normal ping traffic is usually much smaller. The larger packets were therefore investigated further for possible data hidden inside the ICMP payload.
 
-[Large ICMP Packets](https://github.com/Daviankee/cybersecurity-portfolio/blob/main/02-Data-Exfiltration-Detection/ICMP-Exfiltration/screenshots/large-icmp-packets.png) ([image](https://github.com/Daviankee/cybersecurity-portfolio/raw/main/02-Data-Exfiltration-Detection/ICMP-Exfiltration/screenshots/large-icmp-packets.png))
-
 ### 4. Analyze the ICMP Payload
 
 I selected the suspicious ICMP packet and examined the ICMP payload for hidden information.
 
-[ICMP Payload](https://github.com/Daviankee/cybersecurity-portfolio/blob/main/02-Data-Exfiltration-Detection/ICMP-Exfiltration/screenshots/icmp-payload.png) ([image](https://github.com/Daviankee/cybersecurity-portfolio/raw/main/02-Data-Exfiltration-Detection/ICMP-Exfiltration/screenshots/icmp-payload.png))
+[ICMP Payload](screenshots/icmp-payload.png)
 
 The payload contained the hidden TryHackMe flag.
 
@@ -75,11 +75,11 @@ The investigation identified several indicators:
 
 ### Flag Found in the ICMP Exfiltration
 
-[ICMP Flag](https://github.com/Daviankee/cybersecurity-portfolio/blob/main/02-Data-Exfiltration-Detection/ICMP-Exfiltration/screenshots/icmp-flag.png) ([image](https://github.com/Daviankee/cybersecurity-portfolio/raw/main/02-Data-Exfiltration-Detection/ICMP-Exfiltration/screenshots/icmp-flag.png))
+[ICMP Flag](screenshots/icmp-flag.png))
 
 The hidden flag was identified by examining the payload of the suspicious ICMP Echo Request.
 
-`[Insert flag from your lab]`
+`THM{1cmp_3ch0_3xf1ltr4t10n_succ3ss}`
 
 ## Findings
 
