@@ -22,6 +22,8 @@ Identify suspicious HTTP activity and determine whether sensitive data was being
 
 I started by searching the HTTP logs in Splunk:
 
+![http log ](screenshots/http-log.png)
+
 ```text
 index="data_exfil" sourcetype="http_logs"
 ```
@@ -31,6 +33,8 @@ I set the time range to All Time to review the available HTTP activity.
 ### 2. Filter HTTP POST Requests
 
 Since HTTP POST requests can be used to upload data to an external server, I filtered for POST requests:
+
+![http log ](screenshots/http-log-post.png)
 
 ```text
 index="data_exfil" sourcetype="http_logs" method=POST
@@ -42,6 +46,8 @@ This reduced the number of results and allowed me to focus on HTTP upload activi
 
 I then compared the amount of data sent to different domains:
 
+![http log ](screenshots/average-bytes.png)
+
 ```text
 index="data_exfil" sourcetype="http_logs" method=POST | stats count avg(bytes_sent) max(bytes_sent) min(bytes_sent) by domain | sort - count
 ```
@@ -51,6 +57,8 @@ This helped identify domains receiving unusually large amounts of data.
 ### 4. Identify Large POST Requests
 
 I filtered for POST requests sending more than 600 bytes:
+
+![http log ](screenshots/isolate-post.png)
 
 ```text
 index="data_exfil" sourcetype="http_logs" method=POST bytes_sent > 600 | table _time src_ip uri domain dst_ip bytes_sent | sort - bytes_sent
