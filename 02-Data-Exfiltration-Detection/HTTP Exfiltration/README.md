@@ -22,7 +22,7 @@ Identify suspicious HTTP activity and determine whether sensitive data was being
 
 I started by searching the HTTP logs in Splunk:
 
-![http log](screenshots/http-log.png)
+![http log](screenshots/http-logs.png)
 
 ```text
 index="data_exfil" sourcetype="http_logs"
