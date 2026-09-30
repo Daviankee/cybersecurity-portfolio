@@ -22,7 +22,7 @@ Identify suspicious HTTP activity and determine whether sensitive data was being
 
 I started by searching the HTTP logs in Splunk:
 
-![http log ](screenshots/http-log.png)
+![http log](screenshots/http-log.png)
 
 ```text
 index="data_exfil" sourcetype="http_logs"
@@ -34,7 +34,7 @@ I set the time range to All Time to review the available HTTP activity.
 
 Since HTTP POST requests can be used to upload data to an external server, I filtered for POST requests:
 
-![http log ](screenshots/http-log-post.png)
+![http post log](screenshots/http-log-post.png)
 
 ```text
 index="data_exfil" sourcetype="http_logs" method=POST
@@ -46,7 +46,7 @@ This reduced the number of results and allowed me to focus on HTTP upload activi
 
 I then compared the amount of data sent to different domains:
 
-![http log ](screenshots/average-bytes.png)
+![average bytes](screenshots/average-bytes.png)
 
 ```text
 index="data_exfil" sourcetype="http_logs" method=POST | stats count avg(bytes_sent) max(bytes_sent) min(bytes_sent) by domain | sort - count
@@ -58,7 +58,7 @@ This helped identify domains receiving unusually large amounts of data.
 
 I filtered for POST requests sending more than 600 bytes:
 
-![http log ](screenshots/isolate-post.png)
+![isolate post](screenshots/isolate-post.png)
 
 ```text
 index="data_exfil" sourcetype="http_logs" method=POST bytes_sent > 600 | table _time src_ip uri domain dst_ip bytes_sent | sort - bytes_sent
@@ -72,17 +72,19 @@ The results showed a suspicious HTTP request involving a large amount of data be
 
 I opened the `http_lab.pcap` file in Wireshark and filtered for HTTP traffic:
 
+![isolate post](screenshots/http-wireshark.png)
+
 ```text
 http
 ```
 
 This showed both GET and POST requests within the packet capture.
 
-
-
 ### 6. Filter HTTP POST Requests
 
 I then filtered for HTTP POST requests:
+
+![isolate post](screenshots/http-post-wireshark.png)
 
 ```text
 http.request.method == "POST"
@@ -91,16 +93,19 @@ http.request.method == "POST"
 This allowed me to focus on requests potentially carrying uploaded data.
 
 
-
 ### 7. Identify Large HTTP Packets
 
 I first filtered for POST packets larger than 500 bytes:
+
+![isolate post](screenshots/http-frame.png)
 
 ```text
 http.request.method == "POST" and frame.len > 500
 ```
 
 I then increased the threshold to 750 bytes:
+
+![isolate post](screenshots/http-frame-750.png)
 
 ```text
 http.request.method == "POST" and frame.len > 750
@@ -110,13 +115,13 @@ This reduced the traffic to a suspicious POST request that matched the activity 
 
 
 
-### 8. Follow the HTTP Stream
+### 8. Follow the TCP Stream
 
-I followed the HTTP stream for the suspicious POST request to examine the transferred data.
+I followed the TCP stream for the suspicious POST request to examine the transferred data.
 
+![isolate post](screenshots/flag-tcp.png)
 
-
-The HTTP stream contained the sensitive data being transferred to the external destination.
+The TCP stream contained the sensitive data being transferred to the external destination.
 
 ## Indicators of Suspicious Activity
 
@@ -137,15 +142,15 @@ The investigation identified several indicators:
 
 I identified the internal source IP from the suspicious large POST request in Splunk and confirmed it against the corresponding Wireshark traffic.
 
-`[Insert internal IP from your lab]`
+`192.168.1.103`
 
 ### Flag Identified in the Exfiltrated Data
 
 
 
-I followed the HTTP stream and examined the transferred data. The hidden TryHackMe flag was identified inside the exfiltrated data.
+I followed the TCP stream and examined the transferred data. The hidden TryHackMe flag was identified inside the exfiltrated data.
 
-`[Insert flag from your lab]`
+`THM{http_raw_3xf1ltr4t10n_succ3ss}`
 
 ## Findings
 
