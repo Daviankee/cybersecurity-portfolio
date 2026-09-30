@@ -1,4 +1,4 @@
-<img width="651" height="183" alt="image" src="https://github.com/user-attachments/assets/f528039b-bec6-4ead-9640-70a28b701231" /># SOC Investigation: FTP Exfiltration
+# SOC Investigation: FTP Exfiltration
 
 ## Room
 
