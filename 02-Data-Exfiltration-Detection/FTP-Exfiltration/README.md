@@ -101,7 +101,7 @@ I count the number of packets which have 5
 
 Customer-related file exfiltrated from the root account:
 
-![root FTP Payload](screenshots/ftp-root.png)
+![root FTP Payload](screenshots/ftp-customer.png)
 
 `ftp contains "root"`
 I look at the payload and found out customer_data.xlsx which is most likely the answer as it is related to customers
@@ -116,6 +116,7 @@ Looking the Length, I found the largest which is 127 and I link it back to the s
 `192.168.1.105`
 
 Flag identified in the FTP stream:
+
 ![Flag FTP Payload](screenshots/ftp-flag.png)
 
 I then followed the relevant TCP stream to examine the FTP session and identify additional information about the transfer.
