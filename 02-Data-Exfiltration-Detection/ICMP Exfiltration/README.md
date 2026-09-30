@@ -21,7 +21,7 @@ Identify suspicious ICMP traffic and determine whether data was being exfiltrate
 
 I started by filtering the packet capture for ICMP traffic:
 
-[ICMP Traffic](screenshots/icmp-traffic.png))
+![ICMP Traffic](screenshots/icmp-traffic.png)
 
 ```text
 icmp
@@ -33,7 +33,7 @@ This allowed me to isolate ICMP packets and review the communication between int
 
 I filtered for ICMP Echo Request packets:
 
-[ICMP Echo Requests](screenshots/icmp-echo-requests.png))
+![ICMP Echo Requests](screenshots/icmp-echo-requests.png)
 
 ```text
 icmp.type == 8
@@ -45,7 +45,7 @@ Echo Requests are commonly used for ping operations, so I reviewed the traffic f
 
 I then filtered for Echo Requests with a frame length greater than 100 bytes:
 
-[Large ICMP Packets](screenshots/large-icmp-packets.png)
+![Large ICMP Packets](screenshots/large-icmp-packets.png)
 
 ```text
 icmp.type == 8 and frame.len > 100
@@ -57,7 +57,7 @@ Normal ping traffic is usually much smaller. The larger packets were therefore i
 
 I selected the suspicious ICMP packet and examined the ICMP payload for hidden information.
 
-[ICMP Payload](screenshots/icmp-payload.png)
+![ICMP Payload](screenshots/icmp-payload.png)
 
 The payload contained the hidden TryHackMe flag.
 
@@ -75,7 +75,7 @@ The investigation identified several indicators:
 
 ### Flag Found in the ICMP Exfiltration
 
-[ICMP Flag](screenshots/icmp-flag.png))
+![ICMP Flag](screenshots/icmp-flag.png))
 
 The hidden flag was identified by examining the payload of the suspicious ICMP Echo Request.
 
