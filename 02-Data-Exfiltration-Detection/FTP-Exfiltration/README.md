@@ -27,7 +27,6 @@ ftp || ftp-data
 
 This allowed me to isolate the FTP-related communication.
 
-![FTP Traffic](screenshots/ftp-traffic.png)
 
 ### 2. Investigate FTP Credentials
 
@@ -38,8 +37,8 @@ ftp.request.command == "USER" || ftp.request.command == "PASS"
 ```
 
 This allowed me to identify usernames and authentication activity within the FTP traffic.
+![FTP Traffic](screenshots/ftp-traffic.png)
 
-![FTP Credentials](screenshots/ftp-credentials.png)
 
 ### 3. Identify File Uploads
 
