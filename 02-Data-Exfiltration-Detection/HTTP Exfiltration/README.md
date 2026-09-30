@@ -84,7 +84,7 @@ This showed both GET and POST requests within the packet capture.
 
 I then filtered for HTTP POST requests:
 
-![isolate post](screenshots/http-post-wireshark.png)
+![isolate post](screenshots/http-post-wireshark.png.png)
 
 ```text
 http.request.method == "POST"
