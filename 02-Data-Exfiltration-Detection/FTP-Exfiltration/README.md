@@ -75,7 +75,7 @@ ftp && frame.len > 90
 
 I reviewed the resulting traffic and followed the relevant TCP streams to identify potentially sensitive files being transferred.
 
-![Large FTP Payload](screenshots/large-payload-wireshark.png.png)
+![Large FTP Payload](screenshots/large-payload-wireshark.png)
 
 ## Indicators of Suspicious Activity
 
@@ -109,7 +109,7 @@ I look at the payload and found out customer_data.xlsx which is most likely the 
 
 Internal IP sending the largest payload:
 
-![Large FTP Payload](screenshots/large-payload-wireshark.png.png)
+![Large FTP Payload](screenshots/large-payload-wireshark.png)
 
 `ftp && frame.len > 90`
 Looking the Length, I found the largest which is 127 and I link it back to the source IP  
