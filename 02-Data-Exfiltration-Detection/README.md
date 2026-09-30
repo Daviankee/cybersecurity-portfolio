@@ -1,4 +1,4 @@
-# SOC Investigation: Data Exfiltration Detection
+# SOC Investigation: DNS Exfiltration Detection
 
 ## Room
 
@@ -6,100 +6,131 @@ TryHackMe: Data Exfiltration Detection
 
 ## Objective
 
-Identify suspicious data exfiltration activity and determine how the activity was detected.
+Identify possible DNS tunneling and determine which internal hosts and external domains are involved in the suspicious DNS activity.
 
 ## Tools Used
 
-- SIEM
-- Splunk
-- Network logs
-- DNS logs
-- Firewall logs
-- [Other tools used in the room]
-
-## Scenario
-
-[Briefly describe the situation given by the room.]
+* Wireshark
+* Splunk
+* DNS logs
+* `dns_exfil.pcap`
 
 ## Investigation
 
-### 1. Initial Alert
+### 1. DNS Traffic Analysis
 
-[What alert or suspicious activity did you receive?]
+I started by filtering the packet capture for DNS traffic using:
 
-- Timestamp:
-- Source IP:
-- Destination IP:
-- Username:
-- Protocol:
-- Destination port:
+```text
+dns
+```
 
-![Initial Alert](screenshots/alert.png)
+I then filtered for DNS queries without responses:
 
-### 2. Log Investigation
+```text
+dns.flags.response == 0
+```
 
-[Explain what you searched for.]
+This helped narrow the investigation to outbound DNS queries.
 
-Example:
+![DNS Traffic](screenshots/dns-traffic-wireshark.png)
 
-I searched the available logs for activity associated with the source IP and reviewed the related network events.
+### 2. Identify Long DNS Queries
 
-![Log Investigation](screenshots/log-search.png)
+I searched for unusually large DNS packets using:
 
-### 3. Indicators
+```text
+dns && frame.len > 70
+```
 
-During the investigation, I identified the following indicators:
+The results showed DNS requests with unusually large lengths. Long and unusual DNS queries are worth investigating because DNS tunneling can encode data inside query names.
 
-- Source IP:
-- Destination IP:
-- Domain:
-- Port:
-- Protocol:
-- File:
-- Username:
+![Long DNS Queries](screenshots/long-queries.png)
 
-### 4. Analysis
+### 3. Identify the Suspicious Domain
 
-[Explain what made the activity suspicious.]
+I filtered the traffic based on the suspicious domain identified during the investigation.
 
-For example:
+```text
+dns && dns.qry.name contains <suspicious-domain>
+```
 
-- Unusual amount of outbound traffic
-- Unexpected external destination
-- Suspicious DNS requests
-- Unusual protocol or port
-- Activity occurring outside normal hours
-- Repeated connections to the same destination
+The traffic showed repeated DNS requests being sent to the same external domain.
 
-![Evidence](screenshots/evidence.png)
+![Suspicious Domain](screenshots/suspicious-domain.png)
 
-### 5. Investigation Result
+### 4. Splunk Investigation
 
-[Explain what you determined from the evidence.]
+I then correlated the packet-capture findings with DNS logs in Splunk.
 
-### 6. Classification
+Initial search:
 
-Classification: [True Positive / False Positive]
+```text
+index=data_exfil sourcetype=DNS_logs
+```
 
-Reason:
+This allowed me to review the DNS events available in the dataset.
 
-[Explain the evidence supporting your classification.]
+![Splunk DNS Logs](screenshots/splunk-dns.png)
 
-### 7. Response
+### 5. DNS Query Count by Source IP
 
-[Explain what action was taken in the simulation.]
+I used the following query to identify which internal hosts generated the most DNS requests:
 
-Examples:
+```text
+index="data_exfil" sourcetype="DNS_logs" | stats count by src_ip
+```
 
-- Blocked destination IP
-- Blocked domain
-- Isolated host
-- Escalated the incident
-- Continued monitoring
+![Query Count by Source IP](screenshots/query-count.png)
 
-### Lessons Learned
+I compared the request counts to identify the internal IP generating the highest amount of suspicious DNS traffic.
 
-- I learned how to identify indicators associated with possible data exfiltration.
-- I learned how to correlate network activity with other log sources.
-- I improved my understanding of how SOC analysts investigate unusual outbound traffic.
-- I learned the importance of establishing whether suspicious activity represents actual data exfiltration or an attempted connection.
+### 6. Identify Long DNS Queries in Splunk
+
+I searched for unusually long DNS queries using:
+
+```text
+index="data_exfil" sourcetype="DNS_logs" | where len(query) > 30
+```
+
+The results showed unusually long DNS query names, which provided another indicator of possible DNS tunneling.
+
+![Long DNS Query Filter](screenshots/long-query-filter.png)
+
+## Indicators of Suspicious Activity
+
+The investigation identified several indicators associated with possible DNS tunneling:
+
+* High volume of DNS queries
+* Repeated requests to a single external domain
+* Unusually long DNS query names
+* DNS queries without responses
+* Internal hosts generating unusually high DNS request counts
+
+## Findings
+
+The network traffic showed characteristics consistent with DNS tunneling. Multiple internal hosts generated repeated DNS queries to the same external domain, while some queries contained unusually long names.
+
+The Splunk investigation was used to correlate the network traffic with DNS logs and identify the internal source generating the highest number of suspicious requests.
+
+## Investigation Results
+
+Suspicious domain:
+
+`tunnelcorp.net`
+
+Number of suspicious DNS tunneling events:
+
+`315`
+
+Local IP with the highest number of suspicious requests:
+
+`192.168.1.103`
+
+## Lessons Learned
+
+* I learned how DNS traffic can be analysed for indicators of possible data exfiltration.
+* I learned how unusually long DNS queries and high query volumes can help identify suspicious activity.
+* I learned how to use Wireshark filters to narrow down network traffic during an investigation.
+* I learned how to use Splunk to correlate DNS logs with source IP addresses and query counts.
+* I improved my understanding of how SOC analysts combine network traffic analysis with SIEM data during an investigation.
