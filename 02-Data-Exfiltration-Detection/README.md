@@ -46,7 +46,7 @@ For each investigation, I follow a similar process:
 
 Investigated DNS tunneling and analysed suspicious DNS queries for indicators such as unusual query lengths, high query volumes and repeated communication with an external domain.
 
-[View DNS Exfiltration Investigation](DNS-Exfiltration/)
+[View DNS Exfiltration Investigation](DNSTunneling/)
 
 ### FTP Exfiltration
 
